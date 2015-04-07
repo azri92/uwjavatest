@@ -3,7 +3,7 @@ package com.tedneward.example;
 import java.beans.*;
 import java.util.*;
 
-public class Person {
+public class Person implements Comparable<Person>{
   private int age;
   private String name;
   private double salary;
@@ -18,8 +18,17 @@ public class Person {
     name = n;
     age = a;
     salary = s;
+    ssn = "";
   }
 
+  public static class AgeComparator implements Comparator<Person>{
+    @Override
+    public int compare(Person p1, Person p2) {
+      return Integer.compare(p1.getAge(), p2.getAge());
+    }
+  }
+
+  /** getter methods **/
   public int getAge() {
     return age;
   }
@@ -35,6 +44,30 @@ public class Person {
   public String getSSN() {
     return ssn;
   }
+
+  public boolean getPropertyChangeFired() {
+    return propertyChangeFired;
+  }
+
+  /** setter methods **/
+  public void setAge(int age) {
+    if (age < 0)
+      throw new IllegalArgumentException();
+
+    this.age = age;
+  }
+
+  public void setName(String name) {
+    if (name == null)
+      throw new IllegalArgumentException();
+
+    this.name = name;
+  }
+
+  public void setSalary(double salary) {
+    this.salary = salary;
+  }
+
   public void setSSN(String value) {
     String old = ssn;
     ssn = value;
@@ -42,10 +75,8 @@ public class Person {
     this.pcs.firePropertyChange("ssn", old, value);
     propertyChangeFired = true;
   }
-  public boolean getPropertyChangeFired() {
-    return propertyChangeFired;
-  }
 
+  /** other methods **/
   public double calculateBonus() {
     return salary * 1.10;
   }
@@ -58,12 +89,41 @@ public class Person {
     return age + 10;
   }
   
-  public boolean equals(Person other) {
-    return (this.name.equals(p.name) && this.age == p.age);
+  @Override
+  public boolean equals(Object other) {
+    if (other instanceof Person) {
+      Person p = (Person)other;
+      return (this.name.equals(p.name) && this.age == p.age);
+    }
+    return false;
   }
 
-  public String tostring() {
-    return "{{FIXME}}";
+  public String toString() {
+    return "[Person name:" + this.name + " age:" + this.age + " salary:" + this.salary + "]";
+  }
+
+  public static ArrayList<Person> getNewardFamily() {
+    ArrayList<Person> list = new ArrayList<>();
+    Person ted = new Person("Ted", 41, 250000);
+    Person charlotte = new Person("Charlotte", 43, 150000);
+    Person michael = new Person("Michael", 22, 10000);
+    Person matthew = new Person("Matthew", 15, 0);
+    list.add(ted);
+    list.add(charlotte);
+    list.add(michael);
+    list.add(matthew);
+    return list;
+  }
+
+  @Override
+  public int compareTo(Person other) {
+    if (this.salary > other.getSalary()) {
+      return -1;
+    } else if (this.salary < other.getSalary()) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
   // PropertyChangeListener support; you shouldn't need to change any of

@@ -39,7 +39,7 @@ public class TestPerson {
     p.setAge(20);
     p.setName("Fird Birfle");
     p.setSalary(195750.22);
-    
+
     assertEquals("[Person name:Fird Birfle age:20 salary:195750.22]", p.toString());
   }
   
@@ -69,7 +69,7 @@ public class TestPerson {
   public void useAgeComparator() {
     List<Person> people = Person.getNewardFamily();
     Collections.sort(people, new Person.AgeComparator());
-    
+
     assertEquals(new Person("Matthew", 15, 0), people.get(0));
     assertEquals(new Person("Michael", 22, 10000), people.get(1));
     assertEquals(new Person("Ted", 41, 250000), people.get(2));
@@ -99,6 +99,14 @@ public class TestPerson {
     assertEquals("", pce.getOldValue());
     assertEquals("012-34-5678", pce.getNewValue());
     */
+
+    ted.addPropertyChangeListener(new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent pce) {
+        assertEquals("ssn", pce.getPropertyName());
+        assertEquals("", pce.getOldValue());
+        assertEquals("012-34-5678", pce.getNewValue());
+      }
+    } );
 
     // ============ YOUR CHANGES END HERE
     
